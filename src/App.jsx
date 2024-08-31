@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ContactForm from './components/ContactForm/ContactForm';
 import ContactList from './components/ContactList/ContactList';
@@ -20,7 +20,6 @@ export default function App() {
   const [deletedContact, setDeletedContact] = useState(null);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const timerRef = useRef(null);
 
   useEffect(() => {
     dispatch(fetchContacts());
@@ -31,17 +30,13 @@ export default function App() {
   };
 
   const handleDeleteContact = (id) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
     const contactToDelete = contacts.find((contact) => contact.id === id);
     setDeletedContact(contactToDelete);
     dispatch(deleteContact(id));
 
     setIsTimerActive(true);
 
-    timerRef.current = setTimeout(() => {
+    setTimeout(() => {
       setIsTimerActive(false);
       setDeletedContact(null);
     }, 5000);
@@ -52,10 +47,6 @@ export default function App() {
       dispatch(addContact(deletedContact));
       setIsTimerActive(false);
       setDeletedContact(null);
-
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
     }
   };
 
@@ -76,7 +67,7 @@ export default function App() {
   return (
     <div className={styles.container}>
       <h1>Phonebook</h1>
-      <ContactForm onAddContact={handleAddContact} />
+      <ContactForm onSubmit={handleAddContact} />{' '}
       <SearchBox />
       <ContactList
         contacts={contacts}
