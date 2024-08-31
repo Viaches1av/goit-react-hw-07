@@ -1,3 +1,4 @@
+// src/App.jsx
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ContactForm from './components/ContactForm/ContactForm';
@@ -10,17 +11,24 @@ import {
   deleteContact,
   updateContact,
 } from './redux/contactsOps';
-import { selectFilteredContacts } from './redux/contactsSlice';
+import {
+  selectFilteredContacts,
+  selectSelectedContact,
+  selectIsModalOpen,
+  openModal,
+  closeModal,
+  setSelectedContact,
+} from './redux/contactsSlice';
 import { changeFilter } from './redux/filtersSlice';
 import styles from './App.module.css';
 
 export default function App() {
   const dispatch = useDispatch();
   const contacts = useSelector(selectFilteredContacts);
-  const [selectedContact, setSelectedContact] = useState(null);
+  const selectedContact = useSelector(selectSelectedContact);
+  const isModalOpen = useSelector(selectIsModalOpen);
   const [deletedContact, setDeletedContact] = useState(null);
   const [isTimerActive, setIsTimerActive] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const timerRef = useRef(null);
 
@@ -62,17 +70,17 @@ export default function App() {
   };
 
   const handleEditContact = (contact) => {
-    setSelectedContact(contact);
-    setIsModalOpen(true);
+    dispatch(setSelectedContact(contact));
+    dispatch(openModal());
   };
 
   const handleSaveContact = (updatedContact) => {
     dispatch(updateContact(updatedContact));
-    setIsModalOpen(false);
+    dispatch(closeModal());
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    dispatch(closeModal());
   };
 
   const handleFilterChange = (e) => {

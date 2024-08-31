@@ -1,6 +1,11 @@
 // src/redux/contactsSlice.js
 import { createSlice, createSelector } from '@reduxjs/toolkit';
-import { fetchContacts, addContact, deleteContact, updateContact } from './contactsOps';
+import {
+  fetchContacts,
+  addContact,
+  deleteContact,
+  updateContact,
+} from './contactsOps';
 import { selectNameFilter } from './filtersSlice';
 
 const contactsSlice = createSlice({
@@ -9,8 +14,8 @@ const contactsSlice = createSlice({
     items: [],
     loading: false,
     error: null,
-    selectedContact: null, // Состояние для выбранного контакта
-    isModalOpen: false,    // Состояние для управления модальным окном
+    selectedContact: null,
+    isModalOpen: false,
   },
   reducers: {
     setSelectedContact(state, action) {
@@ -21,7 +26,7 @@ const contactsSlice = createSlice({
     },
     closeModal(state) {
       state.isModalOpen = false;
-      state.selectedContact = null; // Очистка выбранного контакта при закрытии модального окна
+      state.selectedContact = null;
     },
   },
   extraReducers: (builder) => {
@@ -57,17 +62,15 @@ const contactsSlice = createSlice({
   },
 });
 
-// Экспортируйте действия для управления модальным окном и выбранным контактом
-export const { setSelectedContact, openModal, closeModal } = contactsSlice.actions;
+export const { setSelectedContact, openModal, closeModal } =
+  contactsSlice.actions;
 
-// Селектор для выбранного контакта
 export const selectSelectedContact = (state) => state.contacts.selectedContact;
 export const selectIsModalOpen = (state) => state.contacts.isModalOpen;
 
-// Селектор для фильтрованных контактов
 export const selectFilteredContacts = createSelector(
   (state) => state.contacts.items,
-  selectNameFilter, // Используйте селектор из filtersSlice
+  selectNameFilter,
   (contacts, filterName) => {
     return contacts.filter((contact) => {
       const contactName = contact.name ? contact.name.toLowerCase() : '';
