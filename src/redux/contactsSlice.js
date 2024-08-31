@@ -1,5 +1,7 @@
+// src/redux/contactsSlice.js
 import { createSlice, createSelector } from '@reduxjs/toolkit';
-import { fetchContacts, addContact, deleteContact } from './contactsOps';
+import { fetchContacts, addContact, deleteContact, updateContact } from './contactsOps';
+import { selectNameFilter } from './filtersSlice';
 
 const contactsSlice = createSlice({
   name: 'contacts',
@@ -7,6 +9,20 @@ const contactsSlice = createSlice({
     items: [],
     loading: false,
     error: null,
+    selectedContact: null, // Состояние для выбранного контакта
+    isModalOpen: false,    // Состояние для управления модальным окном
+  },
+  reducers: {
+    setSelectedContact(state, action) {
+      state.selectedContact = action.payload;
+    },
+    openModal(state) {
+      state.isModalOpen = true;
+    },
+    closeModal(state) {
+      state.isModalOpen = false;
+      state.selectedContact = null; // Очистка выбранного контакта при закрытии модального окна
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -32,17 +48,32 @@ const contactsSlice = createSlice({
         state.items = state.items.filter(
           (contact) => contact.id !== action.payload
         );
+      })
+      .addCase(updateContact.fulfilled, (state, action) => {
+        state.items = state.items.map((contact) =>
+          contact.id === action.payload.id ? action.payload : contact
+        );
       });
   },
 });
 
+// Экспортируйте действия для управления модальным окном и выбранным контактом
+export const { setSelectedContact, openModal, closeModal } = contactsSlice.actions;
+
+// Селектор для выбранного контакта
+export const selectSelectedContact = (state) => state.contacts.selectedContact;
+export const selectIsModalOpen = (state) => state.contacts.isModalOpen;
+
+// Селектор для фильтрованных контактов
 export const selectFilteredContacts = createSelector(
   (state) => state.contacts.items,
-  (state) => state.filters.name,
+  selectNameFilter, // Используйте селектор из filtersSlice
   (contacts, filterName) => {
-    return contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(filterName.toLowerCase())
-    );
+    return contacts.filter((contact) => {
+      const contactName = contact.name ? contact.name.toLowerCase() : '';
+      const filter = filterName.toLowerCase();
+      return contactName.includes(filter);
+    });
   }
 );
 

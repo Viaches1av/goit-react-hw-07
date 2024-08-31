@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ContactForm from './components/ContactForm/ContactForm';
 import ContactList from './components/ContactList/ContactList';
@@ -11,6 +11,7 @@ import {
   updateContact,
 } from './redux/contactsOps';
 import { selectFilteredContacts } from './redux/contactsSlice';
+import { changeFilter } from './redux/filtersSlice';
 import styles from './App.module.css';
 
 export default function App() {
@@ -20,6 +21,8 @@ export default function App() {
   const [deletedContact, setDeletedContact] = useState(null);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const timerRef = useRef(null);
 
   useEffect(() => {
     dispatch(fetchContacts());
@@ -34,9 +37,14 @@ export default function App() {
     setDeletedContact(contactToDelete);
     dispatch(deleteContact(id));
 
+    // Clear any existing timer
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
     setIsTimerActive(true);
 
-    setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       setIsTimerActive(false);
       setDeletedContact(null);
     }, 5000);
@@ -47,6 +55,9 @@ export default function App() {
       dispatch(addContact(deletedContact));
       setIsTimerActive(false);
       setDeletedContact(null);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     }
   };
 
@@ -64,13 +75,16 @@ export default function App() {
     setIsModalOpen(false);
   };
 
+  const handleFilterChange = (e) => {
+    dispatch(changeFilter(e.target.value));
+  };
+
   return (
     <div className={styles.container}>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={handleAddContact} />{' '}
-      <SearchBox />
+      <ContactForm onAddContact={handleAddContact} />
+      <SearchBox onChange={handleFilterChange} />
       <ContactList
-        contacts={contacts}
         onDeleteContact={handleDeleteContact}
         onEditContact={handleEditContact}
       />

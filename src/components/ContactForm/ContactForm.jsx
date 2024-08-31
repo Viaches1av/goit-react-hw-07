@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import styles from './ContactForm.module.css';
 
-const ContactForm = ({ onSubmit }) => {
+const ContactForm = ({ onAddContact }) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name && phone) {
-      onSubmit({ name, phone });
-      setName('');
-      setPhone('');
+      if (typeof onAddContact === 'function') {
+        onAddContact({ name, phone });
+        setName('');
+        setPhone('');
+      } else {
+        console.error('onAddContact is not a function');
+      }
     }
   };
 

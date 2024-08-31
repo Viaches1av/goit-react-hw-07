@@ -11,39 +11,28 @@
 
 .undoContainer {
   position: fixed;
-  bottom: 20px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1000;
 }
 
 .undoButton {
-  position: relative;
-  padding: 10px 20px;
+  font-size: 17px;
   background-color: #f44336;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 3px;
+  padding: 10px;
   cursor: pointer;
-  overflow: hidden;
+  position: relative;
+  animation: fadeOut 5s linear forwards;
 }
 
-.undoButtonTimer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border: 2px solid transparent;
-  border-radius: 3px;
-  animation: countdown 5s linear forwards;
-}
-
-@keyframes countdown {
-  from {
-    border-color: rgba(255, 255, 255, 0.5);
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
   }
-  to {
-    border-color: transparent;
+  100% {
+    opacity: 0;
   }
 }

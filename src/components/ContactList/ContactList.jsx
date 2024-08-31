@@ -1,15 +1,19 @@
+import { useSelector } from 'react-redux';
 import Contact from '../Contact/Contact';
 import styles from './ContactList.module.css';
+import { selectFilteredContacts } from '../../redux/contactsSlice';
 
-const ContactList = ({ contacts, onDeleteContact, onEditContact }) => {
+const ContactList = ({ onDeleteContact, onEditContact }) => {
+  const contacts = useSelector(selectFilteredContacts);
+
   return (
     <ul className={styles.list}>
       {contacts.map((contact) => (
         <li key={contact.id}>
-          <Contact
+          <Contact 
             contact={contact}
-            onDeleteContact={() => onDeleteContact(contact.id)}
-            onEditContact={() => onEditContact(contact)}
+            onDelete={() => onDeleteContact(contact.id)}
+            onEdit={() => onEditContact(contact)}
           />
         </li>
       ))}
