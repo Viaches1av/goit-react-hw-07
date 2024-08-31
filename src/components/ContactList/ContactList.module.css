@@ -1,0 +1,55 @@
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.list li {
+  display: flex;
+}
+
+.contactBox {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 100%;
+}
+
+.info {
+  flex-grow: 1;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: bold;
+  white-space: pre-wrap;
+  margin-bottom: 10px;
+}
+
+.number {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttonEdit,
+.buttonDelete {
+  padding: 3px 10px;
+  font-size: 14px;
+  border-radius: 3px;
+  border: 1px solid #555;
+}
+
+.buttonEdit:hover,
+.buttonDelete:hover {
+  cursor: pointer;
+  border: 0.5px solid #999;
+}

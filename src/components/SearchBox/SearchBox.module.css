@@ -1,0 +1,22 @@
+.container {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.input {
+  padding: 8px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  width: 400px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.input:focus {
+  border-color: #4e75ff;
+  outline: none;
+}
